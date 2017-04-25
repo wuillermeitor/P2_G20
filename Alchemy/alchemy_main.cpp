@@ -1,8 +1,13 @@
 #include <iostream>
+#include "alchemy.cpp"
 #include <vector>
 #include <set>
 #include <unordered_map>
-#include "alchemy.cpp"
+#include <fstream>
+#include <string>
+#include <algorithm>
+#include <cstdlib>
+
 
 int main() {
 
