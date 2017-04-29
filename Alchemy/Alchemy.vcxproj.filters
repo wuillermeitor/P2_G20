@@ -18,8 +18,5 @@
     <ClCompile Include="alchemy_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="alchemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
