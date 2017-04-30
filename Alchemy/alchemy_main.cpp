@@ -29,7 +29,7 @@ void addbasics() {
 void delet() {
 	int num;
 	std::cin >> num;
-	elementos.erase(elementos.begin()+num);
+	elementos.erase(elementos.begin() + num);
 }
 
 void info() {
@@ -61,38 +61,32 @@ void help() {
 }
 
 void main() {
+	std::cout << "------------------" << std::endl;
+	std::cout << "FULLENTI ALCHEMIST" << std::endl;
+	std::cout << "------------------" << std::endl;
+	help();
+	addbasics();
+	std::cout << "You have those elements:" << std::endl;
+	for (int i = 0; i < elementos.size(); i++) {
+		std::cout << i+1 << ": " << elementos[i] << std::endl;
+	}
 	std::string written;
 	std::cin >> written;
-	while (written != "endgame") {
-		if (written == "add") {
-			add();
-		}
-		else if (written == "addbasics") {
-			addbasics();
-		}
-		else if (written == "delete") {
-			delet();
-		}
-		else if (written == "info") {
-			info();
-		}
-		else if (written == "sort") {
-			sort();
-		}
-		else if (written == "clean") {
-			clean();
-		}
-		else if (written == "help") {
-			help();
-		}
-		else {
-			std::cout << "and another one" << std::endl;
-		}
+	//Bucle del juego
+	while (written != "endgame") 
+	{
+		if (written == "add") {add();}
+		else if (written == "addbasics") {addbasics();}
+		else if (written == "delete") {delet();}
+		else if (written == "info") {info();}
+		else if (written == "sort") {sort();}
+		else if (written == "clean") {clean();}
+		else if (written == "help") {help();}
+		else {std::cout << "and another one" << std::endl;}
 
-		std::cout << "You have those elements :" << std::endl;
-
+		std::cout << "You have those elements:" << std::endl;
 		for (int i = 0; i < elementos.size(); i++) {
-			std::cout << i << ":  " << elementos[i] << std::endl;
+			std::cout << i+1 << ": " << elementos[i] << std::endl;
 		}
 		std::cin >> written;
 		system("cls");
