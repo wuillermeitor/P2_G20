@@ -60,7 +60,7 @@ void help() {
 	std::cout << "- Enter the word 'help' to show this tutorial." << std::endl;
 }
 
-void main() {
+void startgame() {
 	std::cout << "------------------" << std::endl;
 	std::cout << "FULLENTI ALCHEMIST" << std::endl;
 	std::cout << "------------------" << std::endl;
@@ -68,8 +68,12 @@ void main() {
 	addbasics();
 	std::cout << "You have those elements:" << std::endl;
 	for (int i = 0; i < elementos.size(); i++) {
-		std::cout << i+1 << ": " << elementos[i] << std::endl;
+		std::cout << i + 1 << ": " << elementos[i] << std::endl;
 	}
+}
+
+void main() {
+	startgame();
 	std::string written;
 	std::cin >> written;
 	//Bucle del juego
