@@ -26,17 +26,13 @@ void addbasics() {
 	elementos.push_back("Water");
 }
 
-void delet() {
-	int num;
-	std::cin >> num;
-	elementos.erase(elementos.begin() + num);
+void delet(int str) {
+	elementos.erase(elementos.begin() + str - 1);
 }
 
-void info() {
-	int num;
-	std::cin >> num;
+void info(int str) {
 	std::string url;
-	url = "https://en.wikipedia.org/wiki/" + elementos[num];
+	url = "https://en.wikipedia.org/wiki/" + elementos[str - 1];
 	ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
 
@@ -146,12 +142,6 @@ void startgame() {
 	}
 }
 
-void splitString(std::string string, std::string string1, std::string string2) {
-	std::size_t found = string.find_last_of(" ");
-	string1 = string.substr(0, found);
-	string2 = string.substr(found + 1);
-}
-
 void main() {
 	readFile();
 	score = 0;
@@ -172,12 +162,26 @@ void main() {
 			int tmp = stoi(str2);
 			add(tmp);
 		}
-		else if (str1 == "add" && str2 == "basics") { addbasics(); }
-		else if (str1 == "delete") { delet(); }
-		else if (str1 == "info") { info(); }
-		else if (str1 == "sort") { sort(); }
-		else if (str1 == "clean") { clean(); }
-		else if (str1 == "help") { help(); }
+		else if (str1 == "add" && str2 == "basics") { 
+			addbasics(); 
+		}
+		else if (str1 == "delete") {
+			int tmp = stoi(str2);
+			delet(tmp);
+		}
+		else if (str1 == "info") {
+			int tmp = stoi(str2);
+			info(tmp);
+		}
+		else if (str1 == "sort") { 
+			sort(); 
+		}
+		else if (str1 == "clean") { 
+			clean(); 
+		}
+		else if (str1 == "help") { 
+			help(); 
+		}
 		else {
 			int tmp1 = stoi(str1);
 			int tmp2 = stoi(str2);
