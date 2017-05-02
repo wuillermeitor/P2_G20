@@ -9,17 +9,24 @@
 #include <cstdlib>
 #include <Windows.h>
 
+//Declaración de la variables generales
 std::vector<std::string> elementos;
+std::vector<std::string> elementosNuevos;
 std::unordered_map<std::string, std::string> mapaElementos;
 int score;
 
 void add(int str) {
+	//Creo un string al que le pongo como valor el elemento en la posición dada por el jugador
+	//y hago push_back para insertarlo al final del vector de elementos. 
 	std::string copia;
-	copia = elementos[str-1];
+	copia = elementos[str - 1]; //(*)
 	elementos.push_back(copia);
+	//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 1 al valor 
+	//que de el jugador de para que se adapte al valor real.
 }
 
 void addbasics() {
+	//Simplemente hacemos push_back de los elementos básicos para añadirlos al final del vector de elementos.
 	elementos.push_back("Air");
 	elementos.push_back("Earth");
 	elementos.push_back("Fire");
@@ -27,13 +34,22 @@ void addbasics() {
 }
 
 void delet(int str) {
-	elementos.erase(elementos.begin() + str - 1);
+	if (str < elementos.size() + 1) {
+		//se hace un erase del elemento que esté en la posición dada por el jugador
+		elementos.erase(elementos.begin() + str - 1); //(*)
+		//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 
+		//1 al valor que de el jugador de para que se adapte al valor real.
+	}
 }
 
 void info(int str) {
-	std::string url;
-	url = "https://en.wikipedia.org/wiki/" + elementos[str - 1];
-	ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+	//
+	if (str < elementos.size() + 1) {
+		std::string url;
+		url = "https://en.wikipedia.org/wiki/" + elementos[str - 1];
+		//línea de código que
+		ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+	}
 }
 
 void sort() {
@@ -71,62 +87,68 @@ void readFile()
 	}
 
 	while (!archivo.eof()) {
-
 		std::getline(archivo, text);
-
 		int j = 0;
 		int i = 0;
 		while (i < text.length() && j == 0) {
 			if (text[i] == '=') j = i;
 			++i;
 		}
-
 		std::string key = text.substr(0, j - 1);
 		std::string cont = text.substr(j + 2, text.length() - (j + 2));
 		mapaElementos[cont] = key;
-
-		//std::cout << key << std::endl;
-		//std::cout << cont << std::endl;
-
-
 	}
-	//std::cout << text << std::endl;
-
 	archivo.close();
 }
 
+void scoreManager(std::string result); //Forward declaration
+
 void comb(int num1, int num2) {
 	system("cls");
-	if (num1 != num2) {
-		if (num1 > num2) {
-			int tmp;
-			tmp = num1;
-			num1 = num2;
-			num2 = tmp;
-		}
-		std::string elem1, elem2;
-		elem1 = elementos[num1 - 1];
-		elem2 = elementos[num2 - 1];
-		std::string aux = " + ";
-		std::string comb = elem1 + aux + elem2;
-		std::unordered_map<std::string, std::string>::iterator it;
-		it = mapaElementos.find(comb);
-		if (it != mapaElementos.end()) {
-			elementos.erase(elementos.begin() + num1 - 1);
-			elementos.erase(elementos.begin() + num2 - 2);
-			std::string result = it->second;
-			elementos.push_back(result);
-			++score;
-			std::cout << "New element found: " << result << std::endl;
+	if (num1 < elementos.size() + 1 && num2 < elementos.size() + 1) {
+		if (num1 != num2) {
+			if (num1 > num2) {
+				int tmp;
+				tmp = num1;
+				num1 = num2;
+				num2 = tmp;
+			}
+			std::string elem1, elem2;
+			elem1 = elementos[num1 - 1];
+			elem2 = elementos[num2 - 1];
+			std::string aux = " + ";
+			std::string comb = elem1 + aux + elem2;
+			std::unordered_map<std::string, std::string>::iterator it;
+			it = mapaElementos.find(comb);
+			if (it != mapaElementos.end()) {
+				elementos.erase(elementos.begin() + num1 - 1);
+				elementos.erase(elementos.begin() + num2 - 2);
+				std::string result = it->second;
+				scoreManager(result);
+				elementos.push_back(result);
+			}
+			else {
+				std::cout << "Combination failure, try again!" << std::endl;
+			}
 		}
 		else {
-			std::cout << "Combination failure, try again!" << std::endl;
+			std::cout << "Cannot combine the same element!" << std::endl;
 		}
 	}
-	else {
-		std::cout << "Cannot combine the same element!" << std::endl;
-	}
+}
 
+void scoreManager(std::string result) {
+	bool combDescubierta = false;
+	for (auto it = elementosNuevos.begin(); it != elementosNuevos.end(); it++) {
+		if (*it==result) {
+			combDescubierta = true;
+		}
+	}
+	if (combDescubierta == false) {
+		std::cout << "New element found: " << result << std::endl;
+		++score;
+		elementosNuevos.push_back(result);
+	}
 }
 
 void startgame() {
@@ -162,8 +184,8 @@ void main() {
 			int tmp = stoi(str2);
 			add(tmp);
 		}
-		else if (str1 == "add" && str2 == "basics") { 
-			addbasics(); 
+		else if (str1 == "add" && str2 == "basics") {
+			addbasics();
 		}
 		else if (str1 == "delete") {
 			int tmp = stoi(str2);
@@ -173,19 +195,19 @@ void main() {
 			int tmp = stoi(str2);
 			info(tmp);
 		}
-		else if (str1 == "sort") { 
-			sort(); 
+		else if (str1 == "sort") {
+			sort();
 		}
-		else if (str1 == "clean") { 
-			clean(); 
+		else if (str1 == "clean") {
+			clean();
 		}
-		else if (str1 == "help") { 
-			help(); 
+		else if (str1 == "help") {
+			help();
 		}
 		else {
 			int tmp1 = stoi(str1);
 			int tmp2 = stoi(str2);
-			comb(tmp1, tmp2); 
+			comb(tmp1, tmp2);
 		}
 		std::cout << "You current score: " << score << std::endl;
 		std::cout << "You have those elements:" << std::endl;
