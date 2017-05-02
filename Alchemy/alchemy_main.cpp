@@ -206,9 +206,16 @@ void startgame() {
 
 //MAIN del juego
 void main() {
+	//Llamamos a la función que leerá el archivo y lo almacenará en un unordered_map.
 	readFile();
+	//Inicialziamos la score a 0.
 	score = 0;
+	//Llamamos a la función que iniciará el juego con los elementos principales.
 	startgame();
+	//Delcaramos un string que se leerá con un getline, similar al cin, pero que en vez de 
+	//coger una sola palabra, cogerá todo lo que se escriba. Se almacenará la primera palabra
+	//en un string auxiliar y la segunda (y lo que reste) en un segundo string auxiliar. La separación
+	//la marcará el espacio entre las palabras.
 	std::string written;
 	getline(std::cin, written);
 	std::string str1;
@@ -217,14 +224,19 @@ void main() {
 	str1 = written.substr(0, found);
 	str2 = written.substr(found + 1);
 
-	//Bucle del juego
+	//Bucle del juego. Mientras el jugador no escriba endgame, el juego seguirá.
 	while (str1 != "endgame")
 	{
+		//Limpiamos la pantalla al principio de cada acción para que no se acumulen muchos elementos.
 		system("cls");
+		//Si el jugador escribe add, pueden pasar varias cosas:
 		if (str1 == "add") {
+			//Si la segunda paalabra es basics, se llamará a la función addbasics().
 			if (str2 == "basics") {
 				addbasics();
 			}
+			//Si no, se comprobará si lo que ha escrito es un número. En caso negativo, no pasará nada. En caso afirmativo, se llamará
+			//a la función add() con el argumento str2 casteado a integer.
 			else {
 				bool isanumber = true;
 				for (int i = 0; i < str2.size(); i++) {
@@ -238,23 +250,48 @@ void main() {
 				}
 			}
 		}
+		//Si el jugador escribe delete, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
+		//se llamará a la función delet() y se le pasará como argumento str2 casteado a integer.
 		else if (str1 == "delete") {
-			int tmp = stoi(str2);
-			delet(tmp);
+			bool isanumber = true;
+			for (int i = 0; i < str2.size(); i++) {
+				if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
+					isanumber = false;
+				}
+			}
+			if (isanumber == true) {
+				int tmp = stoi(str2);
+				delet(tmp);
+			}
 		}
+		//Si el jugador escribe info, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
+		//se llamará a la función info() y se le pasará como argumento str2 casteado a integer.
 		else if (str1 == "info") {
-			int tmp = stoi(str2);
-			info(tmp);
+			bool isanumber = true;
+			for (int i = 0; i < str2.size(); i++) {
+				if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
+					isanumber = false;
+				}
+			}
+			if (isanumber == true) {
+				int tmp = stoi(str2);
+				info(tmp);
+			}
 		}
+		//Si el jugador escribe sort, se llamará a la función sort().
 		else if (str1 == "sort") {
 			sort();
 		}
+		//Si el jugador escribe clean, se llamará a la función clean().
 		else if (str1 == "clean") {
 			clean();
 		}
+		//Si el jugador escribe help, se llamará a la función help().
 		else if (str1 == "help") {
 			help();
 		}
+		//Si el jugador no escirbe ninguna de las opciones anteriores, se comprobará si lo que ha escrito son números. En caso afirmativo, se llamará
+		//a la función comb con str1 y str2 casteados a integer como argumento. Si no son números, no pasará nada.
 		else {
 			bool isanumber = true;
 			for (int i = 0; i < str1.size(); i++) {
@@ -273,6 +310,8 @@ void main() {
 				comb(tmp1, tmp2);
 			}
 		}
+		//Finalmente, se escribe la puntuación del jugador y los elementos disponibles. Además, se volverá a pedir que escriba 
+		//algo por pantalla.
 		std::cout << "You current score: " << score << std::endl;
 		std::cout << "You have those elements:" << std::endl;
 		for (int i = 0; i < elementos.size(); i++) {
