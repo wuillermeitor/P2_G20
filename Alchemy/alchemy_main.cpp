@@ -10,22 +10,20 @@
 #include <Windows.h>
 
 //Declaración de la variables generales
-std::vector<std::string> elementos;
+std::vector<std::string> elementos({" "});
 std::vector<std::string> elementosNuevos;
 std::unordered_map<std::string, std::string> mapaElementos;
 int score;
 
 void add(int str) {
 	//Condición que impedirá que el jugador intente acceder a un elemento que no esté en su lista.
-	if (str < elementos.size() + 1 && str > 0) {
+	if (str < elementos.size() && str > 0) {
 		//Creo un string al que le pongo como valor el elemento en la posición dada por el jugador
 		//y hago push_back para insertarlo al final del vector de elementos. 
 		std::string copia;
-		copia = elementos[str - 1]; //(*)
+		copia = elementos[str];
 		elementos.push_back(copia);
 	}
-	//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 1 al valor 
-	//que de el jugador de para que se adapte al valor real.
 }
 
 void addbasics() {
@@ -38,25 +36,21 @@ void addbasics() {
 
 void delet(int str) {
 	//Condición que impedirá que el jugador intente acceder a un elemento que no esté en su lista.
-	if (str < elementos.size() + 1 && str > 0) {
-		//se hace un erase del elemento que esté en la posición dada por el jugador
-		elementos.erase(elementos.begin() + str - 1); //(*)
+	if (str < elementos.size() && str > 0) {
+		//se hace un erase del elemento que esté en la pocición dada por el jugador
+		elementos.erase(elementos.begin() + str);
 	}
-	//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 
-	//1 al valor que de el jugador de para que se adapte al valor real.
 }
 
 void info(int str) {
 	//Condición que impedirá que el jugador intente acceder a un elemento que no esté en su lista.
-	if (str < elementos.size() + 1 && str > 0) {
+	if (str < elementos.size() && str > 0) {
 		//Guardamos el valor que de el jugador para añadir el elemento que le pertenece al final del link de wikipedia.
 		std::string url;
-		url = "https://en.wikipedia.org/wiki/" + elementos[str - 1];//(*)
+		url = "https://en.wikipedia.org/wiki/" + elementos[str];
 																	//línea de código que nos ofrecisteis en el documento explicativo del juego.
 		ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 	}
-	//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 
-	//1 al valor que de el jugador de para que se adapte al valor real.
 }
 
 void sort() {
@@ -125,7 +119,7 @@ void scoreManager(std::string result); //Forward declaration
 void comb(int num1, int num2) {
 	system("cls");
 	//Condición que impedirá que el jugador intente acceder a un elemento que no esté en su lista.
-	if (num1 < elementos.size() + 1 && num2 < elementos.size() + 1 && num1 > 0 && num2 > 0) {
+	if (num1 < elementos.size() && num2 < elementos.size() && num1 > 0 && num2 > 0) {
 		//Condición que comprobará si el jugador ha escrito el mismo número dos veces. En caso negativo, se
 		//seguirá con normalidad.
 		if (num1 != num2) {
@@ -141,8 +135,8 @@ void comb(int num1, int num2) {
 			//Declaración de dos elementos del tipo string para almacenar en ellos los elementos de las posiciones indicadas
 			//por el jugador.
 			std::string elem1, elem2;
-			elem1 = elementos[num1 - 1];
-			elem2 = elementos[num2 - 1];
+			elem1 = elementos[num1];
+			elem2 = elementos[num2];
 			//Se crea un auxiliar del tipo string que guardará el símbolo " + " para ayudarnos posteriormente a combinar los
 			//dos elementos en un solo string y comprobar si éste tiene una key.
 			std::string aux = " + ";
@@ -154,8 +148,8 @@ void comb(int num1, int num2) {
 			//se eliminarán los elementos usados en la combinación y se llamará a la función scoreManager, y se añadirá el
 			//resultado de la combinación al vector de elementos.
 			if (it != mapaElementos.end()) {
-				elementos.erase(elementos.begin() + num1 - 1);
-				elementos.erase(elementos.begin() + num2 - 2);
+				elementos.erase(elementos.begin() + num1);
+				elementos.erase(elementos.begin() + num2 -1);
 				std::string result = it->second;
 				scoreManager(result);
 				elementos.push_back(result);
@@ -199,8 +193,8 @@ void startgame() {
 	addbasics();
 	std::cout << "You current score: " << score << std::endl;
 	std::cout << "You have those elements:" << std::endl;
-	for (int i = 0; i < elementos.size(); i++) {
-		std::cout << i + 1 << ": " << elementos[i] << std::endl;
+	for (int i = 1; i < elementos.size(); ++i) {
+		std::cout << i << ": " << elementos[i] << std::endl;
 	}
 }
 
@@ -314,9 +308,10 @@ void main() {
 		//algo por pantalla.
 		std::cout << "You current score: " << score << std::endl;
 		std::cout << "You have those elements:" << std::endl;
-		for (int i = 0; i < elementos.size(); i++) {
-			std::cout << i + 1 << ": " << elementos[i] << std::endl;
+		for (int i = 1; i < elementos.size(); ++i) {
+			std::cout << i << ": " << elementos[i] << std::endl;
 		}
+
 		getline(std::cin, written);
 		std::size_t found = written.find_last_of(" ");
 		str1 = written.substr(0, found);
