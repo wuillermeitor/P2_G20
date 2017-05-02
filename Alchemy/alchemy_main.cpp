@@ -52,7 +52,7 @@ void info(int str) {
 		//Guardamos el valor que de el jugador para añadir el elemento que le pertenece al final del link de wikipedia.
 		std::string url;
 		url = "https://en.wikipedia.org/wiki/" + elementos[str - 1];//(*)
-		//línea de código que nos ofrecisteis en el documento explicativo del juego.
+																	//línea de código que nos ofrecisteis en el documento explicativo del juego.
 		ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 	}
 	//(*) Añadimos un -1 porque en vez de ir de 0 a x, va de 1 a x+1, por lo tanto hay que restarle 
@@ -111,6 +111,7 @@ void readFile()
 			if (text[i] == '=') limitKey = i;
 			++i;
 		}
+		std::pair<std::string, std::string> auxiliarMapa;
 		std::string key = text.substr(0, limitKey - 1);
 		std::string count = text.substr(limitKey + 2, text.length() - (limitKey + 2));
 		mapaElementos[count] = key;
@@ -123,21 +124,35 @@ void scoreManager(std::string result); //Forward declaration
 
 void comb(int num1, int num2) {
 	system("cls");
+	//Condición que impedirá que el jugador intente acceder a un elemento que no esté en su lista.
 	if (num1 < elementos.size() + 1 && num2 < elementos.size() + 1 && num1 > 0 && num2 > 0) {
+		//Condición que comprobará si el jugador ha escrito el mismo número dos veces. En caso negativo, se
+		//seguirá con normalidad.
 		if (num1 != num2) {
+			//En caso de que el jugador haya escrito primero un número superior al segundo de su lista de elementos,
+			//se cambiarán de posición para facilitar la eliminación de éstos más tarde e impedir que se produzcan errores
+			//en el juego.
 			if (num1 > num2) {
 				int tmp;
 				tmp = num1;
 				num1 = num2;
 				num2 = tmp;
 			}
+			//Declaración de dos elementos del tipo string para almacenar en ellos los elementos de las posiciones indicadas
+			//por el jugador.
 			std::string elem1, elem2;
 			elem1 = elementos[num1 - 1];
 			elem2 = elementos[num2 - 1];
+			//Se crea un auxiliar del tipo string que guardará el símbolo " + " para ayudarnos posteriormente a combinar los
+			//dos elementos en un solo string y comprobar si éste tiene una key.
 			std::string aux = " + ";
 			std::string comb = elem1 + aux + elem2;
+			//Con un iterador, se comprueba si el string recién creado tiene una key en el mapa de elementos.
 			std::unordered_map<std::string, std::string>::iterator it;
 			it = mapaElementos.find(comb);
+			//Si el iterador no llega al final del mapa de elementos, significa que ha encontrado la combinación, y en ese caso 
+			//se eliminarán los elementos usados en la combinación y se llamará a la función scoreManager, y se añadirá el
+			//resultado de la combinación al vector de elementos.
 			if (it != mapaElementos.end()) {
 				elementos.erase(elementos.begin() + num1 - 1);
 				elementos.erase(elementos.begin() + num2 - 2);
@@ -145,10 +160,12 @@ void comb(int num1, int num2) {
 				scoreManager(result);
 				elementos.push_back(result);
 			}
+			//En cambio, si el iterador alcanza el final del mapa, significa que dicha combinación no existe. 
 			else {
 				std::cout << "Combination failure, try again!" << std::endl;
 			}
 		}
+		//Éste es el resultado de intentar combinar el mismo elemento en una misma posición, como "4 4".
 		else {
 			std::cout << "Cannot combine the same element!" << std::endl;
 		}
@@ -161,7 +178,7 @@ void scoreManager(std::string result) {
 	//simplemente se añadirá.
 	bool combDescubierta = false;
 	for (auto it = elementosNuevos.begin(); it != elementosNuevos.end(); it++) {
-		if (*it==result) {
+		if (*it == result) {
 			combDescubierta = true;
 		}
 	}
@@ -173,6 +190,8 @@ void scoreManager(std::string result) {
 }
 
 void startgame() {
+	//Función en la que se imprimirá el títuo del juego, se llamarán a las funciones help() y addbasics()
+	//para construir el inicio del juego, y se imprimirán los elementos disponibles gracias a un bucle for.
 	std::cout << "------------------" << std::endl;
 	std::cout << "FULLENTI ALCHEMIST" << std::endl;
 	std::cout << "------------------" << std::endl;
@@ -185,6 +204,7 @@ void startgame() {
 	}
 }
 
+//MAIN del juego
 void main() {
 	readFile();
 	score = 0;
@@ -203,7 +223,7 @@ void main() {
 		system("cls");
 		if (str1 == "add") {
 			if (str2 == "basics") {
-			addbasics();
+				addbasics();
 			}
 			else {
 				bool isanumber = true;
