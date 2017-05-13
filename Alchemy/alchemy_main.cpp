@@ -90,8 +90,7 @@ void readFile()
 		//Si el archivo no se encuentra, se cerrará el juego.
 		std::cout << "Cannot read combinations of elements from file elements.dat." << std::endl;
 		std::cout << "Check that it's placed in the same directory as Alchemy.exe!" << std::endl;
-
-		exit(1);
+		system("pause");
 	}
 
 	while (!archivo.eof()) {
@@ -223,15 +222,51 @@ void main() {
 	{
 		//Limpiamos la pantalla al principio de cada acción para que no se acumulen muchos elementos.
 		system("cls");
-		//Si el jugador escribe add, pueden pasar varias cosas:
-		if (str1 == "add") {
-			//Si la segunda paalabra es basics, se llamará a la función addbasics().
-			if (str2 == "basics") {
-				addbasics();
+		//Si el jugador no escirbe ninguna de las opciones dadas, se comprobará si lo que ha escrito son números. En caso afirmativo, se llamará
+		//a la función comb con str1 y str2 casteados a integer como argumento. Si no son números, no pasará nada.
+		if (str1 != "\n") {
+			if (std::atoi(str1.c_str()) && std::atoi(str2.c_str())) {
+				bool isanumber = true;
+				for (int i = 0; i < str1.size(); i++) {
+					if (str1[i] != '0' && str1[i] != '1' && str1[i] != '2' && str1[i] != '3' && str1[i] != '4' && str1[i] != '5' && str1[i] != '6' && str1[i] != '7' && str1[i] != '8' && str1[i] != '9') {
+						isanumber = false;
+					}
+				}
+				for (int i = 0; i < str2.size(); i++) {
+					if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
+						isanumber = false;
+					}
+				}
+				if (isanumber == true) {
+					int tmp1 = stoi(str1);
+					int tmp2 = stoi(str2);
+					comb(tmp1, tmp2);
+				}
 			}
-			//Si no, se comprobará si lo que ha escrito es un número. En caso negativo, no pasará nada. En caso afirmativo, se llamará
-			//a la función add() con el argumento str2 casteado a integer.
-			else {
+			//Si el jugador escribe add, pueden pasar varias cosas:
+			else if (str1 == "add") {
+				//Si la segunda paalabra es basics, se llamará a la función addbasics().
+				if (str2 == "basics") {
+					addbasics();
+				}
+				//Si no, se comprobará si lo que ha escrito es un número. En caso negativo, no pasará nada. En caso afirmativo, se llamará
+				//a la función add() con el argumento str2 casteado a integer.
+				else {
+					bool isanumber = true;
+					for (int i = 0; i < str2.size(); i++) {
+						if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
+							isanumber = false;
+						}
+					}
+					if (isanumber == true) {
+						int tmp = stoi(str2);
+						add(tmp);
+					}
+				}
+			}
+			//Si el jugador escribe delete, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
+			//se llamará a la función delet() y se le pasará como argumento str2 casteado a integer.
+			else if (str1 == "delete") {
 				bool isanumber = true;
 				for (int i = 0; i < str2.size(); i++) {
 					if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
@@ -240,81 +275,48 @@ void main() {
 				}
 				if (isanumber == true) {
 					int tmp = stoi(str2);
-					add(tmp);
+					delet(tmp);
 				}
 			}
-		}
-		//Si el jugador escribe delete, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
-		//se llamará a la función delet() y se le pasará como argumento str2 casteado a integer.
-		else if (str1 == "delete") {
-			bool isanumber = true;
-			for (int i = 0; i < str2.size(); i++) {
-				if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
-					isanumber = false;
+			//Si el jugador escribe info, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
+			//se llamará a la función info() y se le pasará como argumento str2 casteado a integer.
+			else if (str1 == "info") {
+				bool isanumber = true;
+				for (int i = 0; i < str2.size(); i++) {
+					if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
+						isanumber = false;
+					}
+				}
+				if (isanumber == true) {
+					int tmp = stoi(str2);
+					info(tmp);
 				}
 			}
-			if (isanumber == true) {
-				int tmp = stoi(str2);
-				delet(tmp);
+			//Si el jugador escribe sort, se llamará a la función sort().
+			else if (str1 == "sort") {
+				sort();
 			}
-		}
-		//Si el jugador escribe info, se comprobará si el valor almacenado en str2 es un número. En caso negativo, no pasará nada. En caso afirmativo,
-		//se llamará a la función info() y se le pasará como argumento str2 casteado a integer.
-		else if (str1 == "info") {
-			bool isanumber = true;
-			for (int i = 0; i < str2.size(); i++) {
-				if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
-					isanumber = false;
-				}
+			//Si el jugador escribe clean, se llamará a la función clean().
+			else if (str1 == "clean") {
+				clean();
 			}
-			if (isanumber == true) {
-				int tmp = stoi(str2);
-				info(tmp);
+			//Si el jugador escribe help, se llamará a la función help().
+			else if (str1 == "help") {
+				help();
 			}
-		}
-		//Si el jugador escribe sort, se llamará a la función sort().
-		else if (str1 == "sort") {
-			sort();
-		}
-		//Si el jugador escribe clean, se llamará a la función clean().
-		else if (str1 == "clean") {
-			clean();
-		}
-		//Si el jugador escribe help, se llamará a la función help().
-		else if (str1 == "help") {
-			help();
-		}
-		//Si el jugador no escirbe ninguna de las opciones anteriores, se comprobará si lo que ha escrito son números. En caso afirmativo, se llamará
-		//a la función comb con str1 y str2 casteados a integer como argumento. Si no son números, no pasará nada.
-		else {
-			bool isanumber = true;
-			for (int i = 0; i < str1.size(); i++) {
-				if (str1[i] != '0' && str1[i] != '1' && str1[i] != '2' && str1[i] != '3' && str1[i] != '4' && str1[i] != '5' && str1[i] != '6' && str1[i] != '7' && str1[i] != '8' && str1[i] != '9') {
-					isanumber = false;
-				}
+			//Finalmente, se escribe la puntuación del jugador y los elementos disponibles. Además, se volverá a pedir que escriba 
+			//algo por pantalla.
+			std::cout << "You current score: " << score << std::endl;
+			std::cout << "You have those elements:" << std::endl;
+			for (int i = 1; i < elementos.size(); ++i) {
+				std::cout << i << ": " << elementos[i] << std::endl;
 			}
-			for (int i = 0; i < str2.size(); i++) {
-				if (str2[i] != '0' && str2[i] != '1' && str2[i] != '2' && str2[i] != '3' && str2[i] != '4' && str2[i] != '5' && str2[i] != '6' && str2[i] != '7' && str2[i] != '8' && str2[i] != '9') {
-					isanumber = false;
-				}
-			}
-			if (isanumber == true) {
-				int tmp1 = stoi(str1);
-				int tmp2 = stoi(str2);
-				comb(tmp1, tmp2);
-			}
-		}
-		//Finalmente, se escribe la puntuación del jugador y los elementos disponibles. Además, se volverá a pedir que escriba 
-		//algo por pantalla.
-		std::cout << "You current score: " << score << std::endl;
-		std::cout << "You have those elements:" << std::endl;
-		for (int i = 1; i < elementos.size(); ++i) {
-			std::cout << i << ": " << elementos[i] << std::endl;
+
+			getline(std::cin, written);
+			std::size_t found = written.find_last_of(" ");
+			str1 = written.substr(0, found);
+			str2 = written.substr(found + 1);
 		}
 
-		getline(std::cin, written);
-		std::size_t found = written.find_last_of(" ");
-		str1 = written.substr(0, found);
-		str2 = written.substr(found + 1);
 	}
 }
